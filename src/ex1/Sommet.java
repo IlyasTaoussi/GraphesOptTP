@@ -2,6 +2,7 @@ package ex1;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Sommet {
     private int index;
@@ -9,6 +10,12 @@ public class Sommet {
     private int val;
 
     public Sommet() { }
+
+    public Sommet(int index, Position position, int val){
+        this.index = index;
+        this.position = position;
+        this.val = val;
+    }
 
     public int getIndex() {
         return index;
@@ -40,4 +47,31 @@ public class Sommet {
         this.val = val;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sommet sommet = (Sommet) o;
+        return index == sommet.index && val == sommet.val && position.equals(sommet.position);
+    }
+
+    public double distanceTo(Sommet s2){
+        if(Math.abs(position.getX() - s2.getPosition().getX()) == 1 && Math.abs(position.getY() - s2.getPosition().getY()) == 1){
+            return Math.sqrt(2);
+        }
+        else if((Math.abs(position.getX() - s2.getPosition().getX()) == 1 && position.getY() == s2.getPosition().getY())
+                || (Math.abs(position.getY() - s2.getPosition().getY()) == 1 && position.getX() == s2.getPosition().getX())){
+            return 1;
+        }
+        return -1;
+    }
+
+    @Override
+    public String toString() {
+        return "Sommet{" +
+                "index=" + index +
+                ", position=" + position +
+                ", val=" + val +
+                '}';
+    }
 }

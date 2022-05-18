@@ -3,7 +3,13 @@ package ex1;
 public class Arete {
     private int sommet1;
     private int sommet2;
-    private long weight;
+    private double cost;
+
+    public Arete(int sommet1, int sommet2, double cost) {
+        this.sommet1 = sommet1;
+        this.sommet2 = sommet2;
+        this.cost = cost;
+    }
 
     public int getSommet1() {
         return sommet1;
@@ -21,11 +27,20 @@ public class Arete {
         this.sommet2 = sommet2;
     }
 
-    public long getWeight() {
-        return weight;
+    public double getCost() {
+        return cost;
     }
 
-    public void setWeight(long weight) {
-        this.weight = weight;
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    @Override
+    public String toString() {
+        return "Arete{" +
+                "s1=" + sommet1 +
+                ", s2=" + sommet2 +
+                ", cost=" + cost +
+                '}';
     }
 }
