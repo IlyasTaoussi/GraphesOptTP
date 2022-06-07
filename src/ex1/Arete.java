@@ -1,5 +1,9 @@
 package ex1;
 
+/**
+ * @author Ilyas Taoussi, Birkan Yildiz
+ * @version 1.0
+ */
 public class Arete {
     private int sommet1;
     private int sommet2;

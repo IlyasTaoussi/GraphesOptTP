@@ -1,6 +1,9 @@
 package ex1;
 
-import java.util.Objects;
+/**
+ * @author Ilyas Taoussi, Birkan Yildiz
+ * @version 1.0
+ */
 
 public class Position {
 
@@ -38,9 +41,6 @@ public class Position {
 
     @Override
     public String toString() {
-        return "Position{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "(" + x + "," + y + ")";
     }
 }

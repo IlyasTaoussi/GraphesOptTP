@@ -1,24 +1,32 @@
 package ex1;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+/**
+ * @author Ilyas Taoussi, Birkan Yildiz
+ * @version 1.0
+ */
 
 public class Sommet {
     private int index;
     private Position position;
     private int val;
 
-    public Sommet() { }
+    public Sommet() {
+    }
 
-    public Sommet(int index, Position position, int val){
+    public Sommet(int index, Position position, int val) {
         this.index = index;
         this.position = position;
         this.val = val;
     }
 
-    public Sommet(int index){
+    public Sommet(int index) {
         this.index = index;
+    }
+
+    public Sommet(int index, int x, int y, int val) {
+        this.index = index;
+        position = new Position(x, y);
+        this.val = val;
     }
 
     public int getIndex() {
@@ -27,12 +35,6 @@ public class Sommet {
 
     public void setIndex(int index) {
         this.index = index;
-    }
-
-    public Sommet(int index, int x, int y, int val) {
-        this.index = index;
-        position = new Position(x, y);
-        this.val = val;
     }
 
     public Position getPosition() {
@@ -56,16 +58,15 @@ public class Sommet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Sommet sommet = (Sommet) o;
-        if(val == 0 || position == null) return index == sommet.index;
+        if (val == 0 || position == null) return index == sommet.index;
         return index == sommet.index && val == sommet.val && position.equals(sommet.position);
     }
 
-    public double distanceTo(Sommet s2){
-        if(Math.abs(position.getX() - s2.getPosition().getX()) == 1 && Math.abs(position.getY() - s2.getPosition().getY()) == 1){
+    public double distanceTo(Sommet s2) {
+        if (Math.abs(position.getX() - s2.getPosition().getX()) == 1 && Math.abs(position.getY() - s2.getPosition().getY()) == 1) {
             return Math.sqrt(2);
-        }
-        else if((Math.abs(position.getX() - s2.getPosition().getX()) == 1 && position.getY() == s2.getPosition().getY())
-                || (Math.abs(position.getY() - s2.getPosition().getY()) == 1 && position.getX() == s2.getPosition().getX())){
+        } else if ((Math.abs(position.getX() - s2.getPosition().getX()) == 1 && position.getY() == s2.getPosition().getY())
+                || (Math.abs(position.getY() - s2.getPosition().getY()) == 1 && position.getX() == s2.getPosition().getX())) {
             return 1;
         }
         return -1;

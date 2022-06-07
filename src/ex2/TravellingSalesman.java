@@ -13,6 +13,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * @author Ilyas Taoussi, Birkan Yildiz
+ * @version 1.0
+ */
+
 public class TravellingSalesman {
 
     public static Graph createGraph(String path) throws FileNotFoundException {
@@ -23,12 +28,12 @@ public class TravellingSalesman {
         String ligne = sc.nextLine();
         int nb_sommets = Integer.parseInt(ligne.split(" ")[0]);
 
-        for(int i = 0; i < nb_sommets; i++){
+        for (int i = 0; i < nb_sommets; i++) {
             graph.getGraph().put(new Sommet(i), new ArrayList<>());
         }
         graph.setMaxIndex(nb_sommets);
 
-        while(sc.hasNextLine()) {
+        while (sc.hasNextLine()) {
             ligne = sc.nextLine();
             var tmp = ligne.split(" ");
             graph.addArete(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]), Double.parseDouble(tmp[2]));
@@ -44,64 +49,64 @@ public class TravellingSalesman {
         IloNumVar[][] x = new IloNumVar[n][];
         double[][] c = new double[n][n];
 
-        for(int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             x[i] = model.boolVarArray(n);
         }
 
-        for(Sommet sommet: graph.getGraph().keySet()){
+        for (Sommet sommet : graph.getGraph().keySet()) {
             var aretes = graph.getGraph().get(sommet);
-            for(Arete arete : aretes){
+            for (Arete arete : aretes) {
                 c[arete.getSommet1()][arete.getSommet2()] = arete.getCost();
             }
         }
 
         IloLinearNumExpr obj = model.linearNumExpr();
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < n; j++) {
-                if(j != i) obj.addTerm(c[i][j], x[i][j]);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (j != i) obj.addTerm(c[i][j], x[i][j]);
             }
         }
         model.addMinimize(obj);
 
-        for(int j = 0; j < n; j++){
+        for (int j = 0; j < n; j++) {
             IloLinearNumExpr constraint = model.linearNumExpr();
-            for(int i = 0; i < n; i++){
-                if(i != j) constraint.addTerm(1.0, x[i][j]);
+            for (int i = 0; i < n; i++) {
+                if (i != j) constraint.addTerm(1.0, x[i][j]);
             }
             model.addEq(constraint, 1.0);
         }
 
-        for(int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             IloLinearNumExpr constraint = model.linearNumExpr();
-            for(int j = 0; j < n; j++){
-                if(j != i) constraint.addTerm(1.0, x[i][j]);
+            for (int j = 0; j < n; j++) {
+                if (j != i) constraint.addTerm(1.0, x[i][j]);
             }
             model.addEq(constraint, 1.0);
         }
 
         boolean isSolved = model.solve();
-        if(isSolved){
+        if (isSolved) {
             double objValue = model.getObjValue();
             System.out.println("Obj_val = " + objValue);
-            for(int i = 0; i < n; i++){
-                for(int j = 0; j < n; j++){
-                    if(j != i) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (j != i) {
                         var val = model.getValue(x[i][j]);
-                        System.out.println("x[" + i + "]["+ j + "]= " + val);
+                        System.out.println("x[" + i + "][" + j + "]= " + val);
                     }
                 }
             }
-        } else{
+        } else {
             System.out.println("No Solution");
         }
     }
 
-    public static void main(String[] args) throws FileNotFoundException{
-        try{
+    public static void main(String[] args) throws FileNotFoundException {
+        try {
             Graph graph = createGraph("resources/examples/ex2.txt");
             System.out.println(graph);
             solveModel(graph);
-        } catch(IloException | FileNotFoundException ex){
+        } catch (IloException | FileNotFoundException ex) {
             ex.printStackTrace();
         }
 
