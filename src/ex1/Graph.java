@@ -7,6 +7,7 @@ import java.util.Iterator;
 public class Graph {
 
     private HashMap<Sommet, ArrayList<Arete>> graph;
+    private int maxIndex;
 
     public Graph() {
         this.graph = new HashMap<>();
@@ -20,8 +21,42 @@ public class Graph {
         this.graph = graph;
     }
 
-    public void addArete(Sommet s1, Sommet s2){
-        Arete arete = new Arete(s1.getIndex(), s2.getIndex(), s1.distanceTo(s2));
+    public int getMaxIndex() {
+        return maxIndex;
+    }
+
+    public void setMaxIndex(int maxIndex) {
+        this.maxIndex = maxIndex;
+    }
+
+    public int getSourceIndex(){
+        for(Sommet s : graph.keySet()){
+            if(s.getVal() == 2) return s.getIndex();
+        }
+        return -1;
+    }
+
+    public int getTargetIndex(){
+        for(Sommet s : graph.keySet()){
+            if(s.getVal() == 3) return s.getIndex();
+        }
+        return -1;
+    }
+
+    public void addArete(int index1, int index2){
+        Sommet s1 = getSommet(index1);
+        Sommet s2 = getSommet(index2);
+        addArete(s1, s2, s1.distanceTo(s2));
+    }
+
+    public void addArete(int index1, int index2, double cost){
+        Sommet s1 = getSommet(index1);
+        Arete arete = new Arete(s1.getIndex(), index2, cost);
+        graph.get(s1).add(arete);
+    }
+
+    public void addArete(Sommet s1, Sommet s2, double cost){
+        Arete arete = new Arete(s1.getIndex(), s2.getIndex(), cost);
         graph.get(s1).add(arete);
     }
 
@@ -33,6 +68,15 @@ public class Graph {
                 break;
             }
         }
+    }
+
+    public Sommet getSommet(int index){
+        var sommets = graph.keySet();
+        for(Iterator<Sommet> it = sommets.iterator(); it.hasNext(); ) {
+            Sommet sommet = it.next();
+            if(sommet.getIndex() == index) return sommet;
+        }
+        return null;
     }
 
     public void addSommet(Sommet s){

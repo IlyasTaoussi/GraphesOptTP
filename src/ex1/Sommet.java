@@ -17,6 +17,10 @@ public class Sommet {
         this.val = val;
     }
 
+    public Sommet(int index){
+        this.index = index;
+    }
+
     public int getIndex() {
         return index;
     }
@@ -52,6 +56,7 @@ public class Sommet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Sommet sommet = (Sommet) o;
+        if(val == 0 || position == null) return index == sommet.index;
         return index == sommet.index && val == sommet.val && position.equals(sommet.position);
     }
 
