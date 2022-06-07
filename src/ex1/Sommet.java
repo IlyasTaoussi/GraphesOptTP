@@ -5,10 +5,13 @@ package ex1;
  * @version 1.0
  */
 
-public class Sommet {
+public class Sommet implements Comparable<Sommet> {
     private int index;
     private Position position;
     private int val;
+    private double cost;
+    private double heuristic;
+    private Sommet parent = null;
 
     public Sommet() {
     }
@@ -17,6 +20,7 @@ public class Sommet {
         this.index = index;
         this.position = position;
         this.val = val;
+        this.cost = 0;
     }
 
     public Sommet(int index) {
@@ -72,6 +76,26 @@ public class Sommet {
         return -1;
     }
 
+    public double euclideanDistance(Sommet s2) {
+        return Math.sqrt(Math.pow(s2.position.getX()-this.position.getX(), 2) + Math.pow(s2.position.getY() - this.position.getY(), 2));
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    public double getHeuristic() {
+        return heuristic;
+    }
+
+    public void setHeuristic(double heuristic) {
+        this.heuristic = heuristic;
+    }
+
     @Override
     public String toString() {
         return "Sommet{" +
@@ -79,5 +103,18 @@ public class Sommet {
                 ", position=" + position +
                 ", val=" + val +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Sommet o) {
+        return Double.compare(this.heuristic, o.heuristic);
+    }
+
+    public void setParent(Sommet sommet) {
+        this.parent = sommet;
+    }
+
+    public Sommet getParent() {
+        return this.parent;
     }
 }

@@ -1,35 +1,31 @@
 package ex1;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.print.attribute.standard.PDLOverrideSupported;
+import java.util.*;
 
 public class AEtoile {
-    public int compareHeuristic(int heuristicA, int heuristicB) {
-        if(heuristicA < heuristicB) return 1;
-        if(heuristicA == heuristicB) return 0;
-        else return -1;
-    }
 
-    public List<Sommet> shortestWay(Graphe g, Sommet depart, Sommet arriver) {
+    public List<Sommet> shortestWay(Graph g, Sommet depart, Sommet arriver) {
         List<Sommet> closedList = new ArrayList<>();
-        List<Sommet> openList = new ArrayList<>();
+        PriorityQueue<Sommet> openList = new PriorityQueue<>();
         Map<Sommet, ArrayList<Sommet>> map = new HashMap<>();
 
+        depart.setCost(0);
         openList.add(depart);
         while(!openList.isEmpty()) {
-            Sommet sommet = openList.get(0);
-            openList.remove(0);
+            Sommet sommet = openList.peek();
+            openList.remove(sommet);
+            map.put(sommet, new ArrayList<>());
             if(sommet.getPosition().equals(arriver.getPosition())) {
-                var path = contruireArbre(sommet, map);
+                var path = createTree(sommet, map);
                 return path;
             }
-            for(Sommet s : sommet.getNeighbors()) {
-                if(!(closedList.contains(s) || )) {
-                    s.setCost(sommet.getCost()+1);
-                    s.setHeuristic(s.getCost() + getDistance(s.getPosition(), arriver.getPosition()));
+            for(Sommet s : g.getNeighborsOf(sommet)) {
+                if(!(closedList.contains(s) && !openList.contains(s))) {
+                    s.setCost(sommet.getCost()+s.distanceTo(sommet));
+                    s.setHeuristic(s.getCost() + s.euclideanDistance(arriver));
                     openList.add(s);
+                    s.setParent(sommet);
                 }
             }
             closedList.add(sommet);
@@ -37,8 +33,13 @@ public class AEtoile {
         return null;
     }
 
-    private List<Sommet> contruireArbre(Sommet sommet, Map<Sommet, ArrayList<Sommet>> map) {
-        // TODO
-        return null;
+    private List<Sommet> createTree(Sommet sommet, Map<Sommet, ArrayList<Sommet>> map) {
+        ArrayList<Sommet> path = new ArrayList<>();
+        path.add(sommet);
+        while(sommet.getParent() != null) {
+            sommet = sommet.getParent();
+            path.add(sommet);
+        }
+        return path;
     }
 }
