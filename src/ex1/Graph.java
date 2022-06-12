@@ -2,7 +2,6 @@ package ex1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * @author Ilyas Taoussi, Birkan Yildiz
@@ -74,10 +73,20 @@ public class Graph {
         }
     }
 
+    public Arete getArete(int index1, int index2){
+        Sommet s1 = getSommet(index1);
+        var list = graph.get(s1);
+        for (Arete arete : list) {
+            if (arete.getSommet2() == index2) {
+                return arete;
+            }
+        }
+        return null;
+    }
+
     public Sommet getSommet(int index) {
         var sommets = graph.keySet();
-        for (Iterator<Sommet> it = sommets.iterator(); it.hasNext(); ) {
-            Sommet sommet = it.next();
+        for (Sommet sommet : sommets) {
             if (sommet.getIndex() == index) return sommet;
         }
         return null;
@@ -91,20 +100,17 @@ public class Graph {
 
 
     public void delSommet(Sommet s) {
-        if (graph.containsKey(s)) {
-            graph.remove(s);
-        }
+        graph.remove(s);
         var sommets = graph.keySet();
-        for (Iterator<Sommet> it = sommets.iterator(); it.hasNext(); ) {
-            graph.get(it.next()).remove(s.getIndex());
+        for (Sommet sommet : sommets) {
+            graph.get(sommet).remove(s.getIndex());
         }
     }
 
     public ArrayList<Sommet> getNeighborsOf(Sommet sommet) {
         ArrayList<Sommet> neighbors = new ArrayList<>();
         var sommets = graph.keySet();
-        for (Iterator<Sommet> it = sommets.iterator(); it.hasNext(); ) {
-            Sommet s = it.next();
+        for (Sommet s : sommets) {
             if (sommet.distanceTo(s) != -1) neighbors.add(s);
         }
         return neighbors;
@@ -115,8 +121,7 @@ public class Graph {
         StringBuilder sb = new StringBuilder();
 
         var sommets = graph.keySet();
-        for (Iterator<Sommet> it = sommets.iterator(); it.hasNext(); ) {
-            Sommet s = it.next();
+        for (Sommet s : sommets) {
             sb.append(s).append(" ").append(graph.get(s)).append("\n");
         }
 
