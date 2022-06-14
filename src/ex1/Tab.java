@@ -6,6 +6,7 @@ import ilog.concert.IloNumVar;
 import ilog.cplex.IloCplex;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -18,11 +19,11 @@ public class Tab {
         File file = new File(path);
         Scanner sc = new Scanner(file);
         String ligne = sc.nextLine();
-        int[][] tab = new int[Integer.parseInt(ligne.split(" ")[0])][Integer.parseInt(ligne.split(" ")[1])];
+        int[][] tab = new int[Integer.parseInt(ligne.split("\s")[0])][Integer.parseInt(ligne.split("\s")[1])];
         int i = 0;
         while (sc.hasNextLine()) {
             ligne = sc.nextLine();
-            var tmp = ligne.split(" ");
+            var tmp = ligne.split("\s");
             for (int j = 0; j < tmp.length; j++) {
                 tab[i][j] = Integer.parseInt(tmp[j]);
             }
@@ -129,17 +130,49 @@ public class Tab {
     }
 
     public static void main(String[] args) {
+        String path = "resources/examples/reseau_50_50_1.txt";
+
         try {
-            String path = "resources/examples/reseau_50_50_1.txt";
             String sol_path = "resources/output/sol_" + path.split("/")[2];
 
-            var tab = createTab("resources/examples/reseau_50_50_1.txt");
+            var tab = createTab(path);
             Graph g = tabToGraph(tab);
 
             solveModel(g, sol_path);
         } catch (IloException | IOException ex) {
             ex.printStackTrace();
         }
+        try {
+            String sol_path = "resources/output/solAEtoile_" + path.split("/")[2];
+            BufferedWriter writer = new BufferedWriter(new FileWriter(sol_path));
+            var tab = createTab(path);
+            Graph g = tabToGraph(tab);
+            AEtoile a = new AEtoile();
+            Sommet dep = g.getSommet(g.getSourceIndex());
+            Sommet arr = g.getSommet(g.getTargetIndex());
+            long startTime = System.currentTimeMillis();
+            ArrayList<Sommet> solution = (ArrayList<Sommet>) a.shortestWay(g, dep, arr);
+            long endTime = System.currentTimeMillis();
+            System.out.println((endTime - startTime));
 
+            StringBuilder sb = new StringBuilder();
+            sb.append("Obj_val (min Distance) = ")
+                    .append(solution.get(0).getCost()).append("\n")
+                    .append("Chemin :").append("\n")
+                    .append("[");
+            for(int i = solution.size()-1; i>=0; i--) {
+                Sommet s = solution.get(i);
+                if(i == 0)
+                    sb.append(s.getIndex()).append(" ").append(s.getPosition()).append("]");
+                else sb.append(s.getIndex()).append(s.getPosition()).append(" -> ");
+            }
+            writer.write(sb.toString());
+            writer.flush();
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

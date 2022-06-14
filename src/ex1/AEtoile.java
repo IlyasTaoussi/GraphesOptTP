@@ -22,10 +22,12 @@ public class AEtoile {
             }
             for(Sommet s : g.getNeighborsOf(sommet)) {
                 if(!(closedList.contains(s) && !openList.contains(s))) {
-                    s.setCost(sommet.getCost()+s.distanceTo(sommet));
+                    if(s.getCost() == 0)
+                        s.setCost(sommet.getCost()+s.distanceTo(sommet));
                     s.setHeuristic(s.getCost() + s.euclideanDistance(arriver));
                     openList.add(s);
-                    s.setParent(sommet);
+                    if(s.getParent() == null)
+                        s.setParent(sommet);
                 }
             }
             closedList.add(sommet);
